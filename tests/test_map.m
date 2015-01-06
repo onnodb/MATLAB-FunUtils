@@ -87,3 +87,11 @@ function testMappingWithExtendedMapFun(testCase)
     verifyEqual(testCase, B', 1:10);
 end
 
+function testMappingWithStructArray(testCase)
+    A = struct('value', {1 2 3 4}, 'anothervalue', {5 6 7 8});
+    B = map(A, @(s) struct('value', s.value*2, 'more', s.anothervalue*3));
+    B_correct = struct('value', {2 4 6 8}, 'more', {15 18 21 24});
+
+    verifyEqual(testCase, B, B_correct);
+end
+

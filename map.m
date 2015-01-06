@@ -6,12 +6,20 @@ function [B] = map(A, fun, varargin)
 % B = map(A, @fun, dim)
 %
 % INPUT:
+% A = an N-D array (vector, matrix, or multidimensional array); a cell
+%       array (of any number of dimensions); or a struct array (of any
+%       number of dimensions).
 % fun = a function of one of the following prototypes:
 %           function [b] = fun(item)
 %           function [b] = fun(item, idx)
 %       with:
 %           item = an item from the collection.
 %           idx = index of the item within the collection.
+%
+% OUTPUT:
+% B = values from A, after processing by 'fun'.
+%       Note that 'map' tries to intelligently adapt the type and shape of
+%       'B' to the type of output produced by 'fun'.
 %
 % SEE ALSO:
 % arrayfun, cellfun
