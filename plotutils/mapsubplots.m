@@ -1,5 +1,5 @@
 function [ax] = mapsubplots(n, plotFun, varargin)
-% Create a figure with subplots, using anonymous functions.
+% MAPSUBPLOTS Create a figure with subplots, using anonymous functions.
 %
 % SYNTAX:
 % mapsubplots(n, plotFun)
