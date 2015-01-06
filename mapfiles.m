@@ -1,10 +1,10 @@
-function [B] = cmapfiles(pathName, fun, varargin)
-% CMAPFILES Map filenames from the filesystem.
+function [B] = mapfiles(pathName, fun, varargin)
+% mapfiles Map filenames from the filesystem.
 %
 % SYNTAX:
-% B = cmapfiles(pathName, fun)
-% B = cmapfiles(..., 'key', value)
-% B = cmapfiles(..., 'flag')
+% B = mapfiles(pathName, fun)
+% B = mapfiles(..., 'key', value)
+% B = mapfiles(..., 'flag')
 %
 % INPUT:
 % pathName = name of a folder, or set of files. You can use wildcards (*), just
