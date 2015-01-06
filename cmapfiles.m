@@ -1,10 +1,10 @@
-function [B] = mapfiles(pathName, fun, varargin)
-% MAPFILES Map filenames from the filesystem.
+function [B] = cmapfiles(pathName, fun, varargin)
+% CMAPFILES Map filenames from the filesystem.
 %
 % SYNTAX:
-% B = mapfiles(pathName, fun)
-% B = mapfiles(..., 'key', value)
-% B = mapfiles(..., 'flag')
+% B = cmapfiles(pathName, fun)
+% B = cmapfiles(..., 'key', value)
+% B = cmapfiles(..., 'flag')
 %
 % INPUT:
 % pathName = name of a folder, or set of files. You can use wildcards (*), just
@@ -60,7 +60,7 @@ end
 
 pathsToProcess = collectPaths(pathName, mask);
 
-B = map(pathsToProcess', fun, 'useParallel', args.useParallel);
+B = cmap(pathsToProcess', fun, 'useParallel', args.useParallel);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -1,9 +1,9 @@
-function [B] = map(A, fun, varargin)
-% MAP Apply a function to all elements of a collection, and return the results.
+function [B] = cmap(A, fun, varargin)
+% CMAP Apply a function to all elements of a collection, and return the results.
 %
 % SYNTAX:
-% B = map(A, @fun)
-% B = map(A, @fun, dim)
+% B = cmap(A, @fun)
+% B = cmap(A, @fun, dim)
 %
 % INPUT:
 % A = an N-D array (vector, matrix, or multidimensional array); a cell
@@ -18,7 +18,7 @@ function [B] = map(A, fun, varargin)
 %
 % OUTPUT:
 % B = values from A, after processing by 'fun'.
-%       Note that 'map' tries to intelligently adapt the type and shape of
+%       Note that 'cmap' tries to intelligently adapt the type and shape of
 %       'B' to the type of output produced by 'fun'.
 %
 % FLAG ARGUMENTS:
@@ -37,7 +37,7 @@ if ~isempty(varargin)
         % Second syntax, for N-D numeric arrays, specifying 'dim' to iterate
         % over.
         if ~isnumeric(A)
-            error('MAP:InvalidArgument', 'Invalid collection: numeric N-D array expected.');
+            error('CMAP:InvalidArgument', 'Invalid collection: numeric N-D array expected.');
         end
         origSize = size(A);
         dim = varargin{1};
@@ -49,13 +49,13 @@ if ~isempty(varargin)
 end
 
 if ~isa(fun, 'function_handle')
-    error('MAP:InvalidMapFunction', 'Handle to map function expected.');
+    error('CMAP:InvalidMapFunction', 'Handle to map function expected.');
 end
 
 % Figure out what syntax the mapping function is using.
 funType = nargin(fun);
 if funType < 1 || funType > 2
-    error('MAP:InvalidMapFunction', 'Invalid map function: invalid number of arguments.');
+    error('CMAP:InvalidMapFunction', 'Invalid map function: invalid number of arguments.');
 end
 
 % Key-value pair, and flag arguments
@@ -130,7 +130,7 @@ end
             splitA = A(:);
         else
             if dim > ndims(A)
-                error('MAP:InvalidDimension', 'Invalid dimension %d: input only has %d dimensions.', dim, ndims(A));
+                error('CMAP:InvalidDimension', 'Invalid dimension %d: input only has %d dimensions.', dim, ndims(A));
             end
 
             % Permute the dimensions of the N-D matrix so that the dimension of
