@@ -95,3 +95,9 @@ function testMappingWithStructArray(testCase)
     verifyEqual(testCase, B, B_correct);
 end
 
+function testParallelization(testCase)
+    A = 1:10;
+    B = map(A, @(i) i*2, 'useParallel');
+
+    verifyEqual(testCase, B, 2.*A);
+end

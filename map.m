@@ -21,6 +21,9 @@ function [B] = map(A, fun, varargin)
 %       Note that 'map' tries to intelligently adapt the type and shape of
 %       'B' to the type of output produced by 'fun'.
 %
+% FLAG ARGUMENTS:
+% useParallel = if given, uses a 'parfor' loop, for parallel processing.
+%
 % SEE ALSO:
 % arrayfun, cellfun
 
@@ -55,6 +58,13 @@ if funType < 1 || funType > 2
     error('MAP:InvalidMapFunction', 'Invalid map function: invalid number of arguments.');
 end
 
+% Key-value pair, and flag arguments
+defArgs = struct(...
+                  'useParallel',                            false ...
+                );
+args = pargs(varargin, defArgs, {'useParallel'});
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Perform mapping
@@ -62,19 +72,36 @@ end
 B = cell(size(A));
 outputIsScalar = false(size(A));
 
-for i = 1:numel(A)
-    item = A(i);
-    if iscell(item) && isscalar(item)
-        item = item{1};
-    end
-    switch funType
-        case 1
-            B{i} = fun(item);
-        case 2
-            B{i} = fun(item, i);
-    end
+if args.useParallel
+    parfor i = 1:numel(A)
+        item = A(i);
+        if iscell(item) && isscalar(item)
+            item = item{1};
+        end
+        switch funType
+            case 1
+                B{i} = fun(item);
+            case 2
+                B{i} = fun(item, i);
+        end
 
-    outputIsScalar(i) = isscalar(B{i});
+        outputIsScalar(i) = isscalar(B{i});
+    end
+else
+    for i = 1:numel(A)
+        item = A(i);
+        if iscell(item) && isscalar(item)
+            item = item{1};
+        end
+        switch funType
+            case 1
+                B{i} = fun(item);
+            case 2
+                B{i} = fun(item, i);
+        end
+
+        outputIsScalar(i) = isscalar(B{i});
+    end
 end
 
 
