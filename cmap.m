@@ -100,7 +100,7 @@ else
                 B{i} = fun(item, i);
         end
 
-        outputIsScalar(i) = isscalar(B{i});
+        outputIsScalar(i) = isscalar(B{i}) && ~isobject(B{i});
     end
 end
 
