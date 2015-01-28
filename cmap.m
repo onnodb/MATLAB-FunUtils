@@ -70,7 +70,6 @@ args = pargs(varargin, defArgs, {'useParallel'});
 %% Perform mapping
 
 B = cell(size(A));
-outputIsScalar = false(size(A));
 
 if args.useParallel
     parfor i = 1:numel(A)
@@ -84,8 +83,6 @@ if args.useParallel
             case 2
                 B{i} = fun(item, i);
         end
-
-        outputIsScalar(i) = isscalar(B{i});
     end
 else
     for i = 1:numel(A)
@@ -99,14 +96,17 @@ else
             case 2
                 B{i} = fun(item, i);
         end
-
-        outputIsScalar(i) = isscalar(B{i}) && ~isobject(B{i});
     end
 end
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Process output
+
+outputIsScalar = false(size(A));
+for i = 1:numel(B)
+    outputIsScalar(i) = isscalar(B{i}) && ~isobject(B{i});
+end
 
 if isempty(B)
     B = [];
