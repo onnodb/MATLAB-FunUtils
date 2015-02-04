@@ -105,7 +105,7 @@ end
 
 outputIsScalar = false(size(A));
 for i = 1:numel(B)
-    outputIsScalar(i) = isscalar(B{i}) && ~isobject(B{i});
+    outputIsScalar(i) = isscalar(B{i}) && ~isobject(B{i}) && ~isa(B{i}, 'function_handle');
 end
 
 if isempty(B)
