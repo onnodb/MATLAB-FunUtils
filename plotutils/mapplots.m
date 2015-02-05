@@ -18,6 +18,9 @@ function [h] = mapplots(n, plotFun, varargin)
 % OUTPUT:
 % h = cell array with plot handles of the plots created.
 %
+% KEY-VALUE PAIR ARGUMENTS:
+% parent = handle to the Axes to contain the plot (optional).
+%
 % EXAMPLES:
 % mapplots(4, @(i) plot(i.*rand(100,1), '-'));
 %
@@ -32,6 +35,7 @@ if ~isa(plotFun, 'function_handle')
 end
 
 defArgs = struct(...
+                  'parent',                             [] ...
                 );
 args = pargs(varargin, defArgs);
 
@@ -39,7 +43,11 @@ args = pargs(varargin, defArgs);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Make plots
 
-figure;
+if isempty(args.parent)
+    figure;
+else
+    axes(args.parent);
+end
 
 h = cell(n,1);
 

@@ -21,6 +21,7 @@ function [ax] = mapsubplots(n, plotFun, varargin)
 % ax = cell array with axes handles of the subplots created.
 %
 % KEY-VALUE PAIR ARGUMENTS:
+% parent = optional Figure handle.
 % title = either a string that can be passed into "sprintf", containing a
 %       single formatspec "%d"; the formatted string is then used as title
 %       for each of the subplots. Or a function handle, to a function of
@@ -51,6 +52,7 @@ defArgs = struct(...
                   'title',                              [] ...
                 , 'xlabel',                             [] ...
                 , 'ylabel',                             [] ...
+                , 'parent',                             [] ...
                 );
 args = pargs(varargin, defArgs);
 
@@ -69,7 +71,12 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Make plots
 
-figure;
+if isempty(args.parent)
+    figure;
+else
+    figure(args.parent);
+    clf();
+end
 
 ax = cell(n,1);
 
