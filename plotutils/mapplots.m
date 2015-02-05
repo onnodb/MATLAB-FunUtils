@@ -14,6 +14,8 @@ function [h] = mapplots(n, plotFun, varargin)
 %           h = the handle of the plot created.
 %       The function should call plotting functions to create the actual plots,
 %       and return the created plot handle.
+%       Alternatively, it is also possible to specify a cell array with
+%       multiple function handles.
 %
 % OUTPUT:
 % h = cell array with plot handles of the plots created.
@@ -30,7 +32,11 @@ function [h] = mapplots(n, plotFun, varargin)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Parse & validate input
 
-if ~isa(plotFun, 'function_handle')
+if isa(plotFun, 'function_handle')
+    plotFun = {plotFun};
+elseif (iscell(plotFun) && ~isempty(plotFun) && isa(plotFun{1}, 'function_handle'))
+    % ok
+else
     error('Invalid argument "plotFun": function handle expected.');
 end
 
@@ -49,10 +55,16 @@ else
     axes(args.parent);
 end
 
-h = cell(n,1);
+h = cell(n,length(plotFun));
 
 for iPlot = 1:n
-    h{iPlot} = plotFun(iPlot);
+    for i = 1:length(plotFun)
+        if nargout(plotFun{i}) == 0
+            plotFun{i}(iPlot);
+        else
+            h{iPlot,i} = plotFun{i}(iPlot);
+        end
+    end
     if iPlot == 1
         hold('on');
     end

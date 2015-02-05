@@ -16,6 +16,8 @@ function [ax] = mapsubplots(n, plotFun, varargin)
 %       with:
 %           idx = index of the subplot.
 %       The function should call plotting functions to create the actual plots.
+%       Alternatively, it is also possible to specify a cell array with
+%       multiple function handles.
 %
 % OUTPUT:
 % ax = cell array with axes handles of the subplots created.
@@ -44,7 +46,11 @@ function [ax] = mapsubplots(n, plotFun, varargin)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Parse & validate input
 
-if ~isa(plotFun, 'function_handle')
+if isa(plotFun, 'function_handle')
+    plotFun = {plotFun};
+elseif (iscell(plotFun) && ~isempty(plotFun) && isa(plotFun{1}, 'function_handle'))
+    % ok
+else
     error('Invalid argument "plotFun": function handle expected.');
 end
 
@@ -83,7 +89,9 @@ ax = cell(n,1);
 for iSubplot = 1:n
     ax{iSubplot} = subplot(nRows, nCols, iSubplot);
 
-    plotFun(iSubplot);
+    for i = 1:length(plotFun)
+        plotFun{i}(iSubplot);
+    end
 
     callLayoutFun(@title,  args.title,  iSubplot);
     callLayoutFun(@xlabel, args.xlabel, iSubplot);
