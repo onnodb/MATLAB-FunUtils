@@ -90,6 +90,9 @@ for iSubplot = 1:n
     ax{iSubplot} = subplot(nRows, nCols, iSubplot);
 
     for i = 1:length(plotFun)
+        if i == 2
+            hold('on');
+        end
         plotFun{i}(iSubplot);
     end
 
