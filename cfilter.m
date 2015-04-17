@@ -5,7 +5,7 @@ function [B] = cfilter(A, fun, varargin)
 % B = cfilter(A, @fun)
 %
 % INPUT:
-% A = a vector, either numeric, a cell array, of a struct array.
+% A = a vector, either numeric, a cell array, or a struct array.
 % fun = a function of one of the following prototypes:
 %           function [b] = fun(item)
 %           function [b] = fun(item, idx)
