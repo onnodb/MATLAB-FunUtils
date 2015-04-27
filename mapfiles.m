@@ -56,6 +56,8 @@ elseif ~isempty(strfind(pathName, '*'))
         pathName = rootPath;
         mask     = fileName;
     end
+else
+    error('Invalid path or path not found.');
 end
 
 pathsToProcess = collectPaths(pathName, mask);
