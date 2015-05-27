@@ -60,10 +60,10 @@ end
 
 % Key-value pair, and flag arguments
 defArgs = struct(...
-                  'useParallel',                            false ...
+                  'ignoreErrors',                           false ...
+                , 'useParallel',                            false ...
                 );
-args = pargs(varargin, defArgs, {'useParallel'});
-
+args = pargs(varargin, defArgs, {'ignoreErrors','useParallel'});
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -71,17 +71,26 @@ args = pargs(varargin, defArgs, {'useParallel'});
 
 B = cell(size(A));
 
+ignoreErrors = args.ignoreErrors;
 if args.useParallel
     parfor i = 1:numel(A)
         item = A(i);
         if iscell(item) && isscalar(item)
             item = item{1};
         end
-        switch funType
-            case 1
-                B{i} = fun(item);
-            case 2
-                B{i} = fun(item, i);
+        try
+            switch funType
+                case 1
+                    B{i} = fun(item);
+                case 2
+                    B{i} = fun(item, i);
+            end
+        catch err
+            if ignoreErrors
+                B{i} = [];
+            else
+                rethrow(err);
+            end
         end
     end
 else
@@ -90,11 +99,19 @@ else
         if iscell(item) && isscalar(item)
             item = item{1};
         end
-        switch funType
-            case 1
-                B{i} = fun(item);
-            case 2
-                B{i} = fun(item, i);
+        try
+            switch funType
+                case 1
+                    B{i} = fun(item);
+                case 2
+                    B{i} = fun(item, i);
+            end
+        catch err
+            if ignoreErrors
+                B{i} = [];
+            else
+                rethrow(err);
+            end
         end
     end
 end
