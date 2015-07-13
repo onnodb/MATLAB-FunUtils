@@ -24,6 +24,8 @@ function [ax] = mapsubplots(n, plotFun, varargin)
 %
 % KEY-VALUE PAIR ARGUMENTS:
 % parent = optional Figure handle.
+% subplotFun = optional handle to a function that replaces MATLAB's "subplot"
+%       function. (Should therefore have the same prototype.)
 % title = either a string that can be passed into "sprintf", containing a
 %       single formatspec "%d"; the formatted string is then used as title
 %       for each of the subplots. Or a function handle, to a function of
@@ -36,6 +38,9 @@ function [ax] = mapsubplots(n, plotFun, varargin)
 %       subplots.
 % ylabel = works analogously to "title", but sets the "ylabel" of each of the
 %       subplots.
+% axesProps = either a cell array with properties to be set for each of the
+%       subplots' Axes object; or a handle to a function that takes a subplot
+%       index, and returns such a cell array.
 %
 % EXAMPLES:
 % mapsubplots(4, @(i) plot(i.*rand(100,1), '-'));
@@ -59,6 +64,8 @@ defArgs = struct(...
                 , 'xlabel',                             [] ...
                 , 'ylabel',                             [] ...
                 , 'parent',                             [] ...
+                , 'axesProps',                          [] ...
+                , 'subplotFun',                         @subplot ...
                 );
 args = pargs(varargin, defArgs);
 
@@ -87,7 +94,7 @@ end
 ax = cell(n,1);
 
 for iSubplot = 1:n
-    ax{iSubplot} = subplot(nRows, nCols, iSubplot);
+    ax{iSubplot} = args.subplotFun(nRows, nCols, iSubplot);
 
     for i = 1:length(plotFun)
         if i == 2
@@ -99,6 +106,19 @@ for iSubplot = 1:n
     callLayoutFun(@title,  args.title,  iSubplot);
     callLayoutFun(@xlabel, args.xlabel, iSubplot);
     callLayoutFun(@ylabel, args.ylabel, iSubplot);
+
+    if ~isempty(args.axesProps)
+        if iscell(args.axesProps)
+            set(gca(), args.axesProps{:});
+        elseif isa(args.axesProps, 'function_handle')
+            props = args.axesProps(iSubplot);
+            if ~isempty(props)
+                set(gca(), props{:});
+            end
+        else
+            error('Invalid argument "axesProps": function handle or cell array expected.');
+        end
+    end
 end
 
 
